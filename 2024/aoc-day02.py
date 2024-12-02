@@ -1,24 +1,32 @@
-left = []
-right = []
-right_count = {}
-sim_score = 0
-with open('01input.txt') as f:
+def is_safe(rep):
+    delta_rep = []
+    for i in range(len(rep)-1):
+        delta = rep[i+1] - rep[i]
+        delta_rep.append(delta)
+    if max(delta_rep) <= 3 and min(delta_rep) >= 1:
+        return 1
+    elif max(delta_rep) <= -1 and min(delta_rep) >= -3:
+        return 1
+    else:
+        return 0
+
+safe1 = 0
+with open('02input.txt') as f:
     for line in f:
-        l, r = map(int, line.split())
-        left.append(l)
-        right.append(r)
-        try:
-            right_count[r] += 1
-        except:
-            right_count[r] = 1
-left.sort()
-right.sort()
-diff = [abs(l - r) for l, r in zip(left, right)]
-total_diff = sum(diff)
-print("Part 1:", total_diff)
-for l in left:
-    try:
-        sim_score += l * right_count[l]
-    except:
-        continue
-print("Part 2:", sim_score)
+        report = list(map(int, line.split()))
+        if is_safe(report):
+            safe1 += 1
+print("Part 1:", safe1)
+
+safe2 = 0
+with open('02input.txt') as f:
+    for line in f:
+        report = list(map(int, line.split()))
+        safe = 0
+        for i in range(len(report)):
+            new_report = list(report)
+            del new_report[i]
+            if is_safe(new_report):
+                safe = 1
+        safe2 += safe
+print("Part 2:", safe2)
